@@ -1,0 +1,79 @@
+val ruleName = "Gesture Mapping"
+val gestenNameItem = drehbinding_drehknopf_B8_27_EB_BE_1E_4A_lastMotion
+val timeStampItem = drehbinding_drehknopf_B8_27_EB_BE_1E_4A_eventTime
+
+//Hue Bulb 1 val
+val Farbe = hue_0210_1_bulb1_color
+val Farbtemperatur = hue_0210_1_bulb1_color_temperature
+val Alarm = hue_0210_1_bulb1_alert
+val Farbeffekt = hue_0210_1_bulb1_effect
+
+//Liste aller Gesten die behandelt werden soll
+val g1 = "Geste 1"
+val g2 = "Geste 2"
+val g3 = "Geste 3"
+val g4 = "Geste 4"
+val g5 = "Geste 5"
+val g6 = "Geste 6"
+val g7 = "Geste 7"
+val g8 = "Geste 8"
+val g9 = "Geste 9"
+
+rule "Gesture Mapping"
+when
+    Item drehbinding_drehknopf_B8_27_EB_BE_1E_4A_eventTime changed
+then
+    logDebug(ruleName, "A new gesture was executed")
+
+    val gestenName = gestenNameItem.state.toString
+    val timeStamp = timeStampItem.state.toString
+    
+    switch(gestenName) {
+        case g1: {
+            Farbeffekt.sendCommand(ON)
+        }
+        case g2: {
+            Farbeffekt.sendCommand(OFF)
+        }
+        case g3: {
+            logDebug(ruleName, "Executing this")
+            Alarm.sendCommand("LSELECT")
+        }
+        case g4: {
+            val value = new PercentType(0)
+            Farbtemperatur.sendCommand(value)
+        }
+        case g5: {
+            val value = new PercentType(50)
+            Farbtemperatur.sendCommand(value)
+        }
+        case g6: {
+            val value = new PercentType(100)
+            Farbtemperatur.sendCommand(value)
+        }
+        case g7: {
+            val hue = new DecimalType(0)
+            val saturation = new PercentType(100)
+            val brightness = new PercentType(100)
+            val value = new HSBType(hue, saturation, brightness)
+
+            Farbe.sendCommand(value)
+        }
+        case g8: {
+            val hue = new DecimalType(120)
+            val saturation = new PercentType(100)
+            val brightness = new PercentType(100)
+            val value = new HSBType(hue, saturation, brightness)
+
+            Farbe.sendCommand(value)
+        }
+        case g9: {
+            val hue = new DecimalType(240)
+            val saturation = new PercentType(100)
+            val brightness = new PercentType(100)
+            val value = new HSBType(hue, saturation, brightness)
+            
+            Farbe.sendCommand(value)
+        }
+    }
+end
